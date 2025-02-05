@@ -10,6 +10,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	// "backend/models"
+	// "github.com/prathamrao021/HelperHub/backend/models"
 )
 
 var db *gorm.DB
@@ -55,10 +57,58 @@ func createUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "User data created successfully"})
 }
 
+func deleteUser(c *gin.Context) {
+	username := c.Param("username")
+
+	if err := db.Where("username = ?", username).Delete(&models.User{}).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "User deleted successfully"})
+}
+
+func getUser(c *gin.Context) {
+	username := c.Param("username")
+	var user models.User
+
+	if err := db.Where("username = ?", username).First(&user).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "User Data Sent."})
+}
+
+func updateUser(c *gin.Context) {
+	username := c.Param("username")
+	var user models.User
+
+	if err := db.Where("username = ?", username).First(&user).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := db.Save(&user).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "User data updated successfully"})
+}
+
 func main() {
 	initDB()
+
 	r := gin.Default()
 	r.GET("/ping", Caller)
 	r.POST("/users/create", createUser)
+	r.GET("/users/read/:username", getUser)
+	r.POST("/users/delete/:username", deleteUser)
+	r.POST("/users/update/:username", updateUser)
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
