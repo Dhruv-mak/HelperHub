@@ -13,6 +13,9 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"github.com/auth0/go-auth0"
+	"github.com/auth0/go-auth0/management"
+	"github.com/auth0/go-auth0/authentication"
 )
 
 func initDB() *gorm.DB {
@@ -39,10 +42,16 @@ func main() {
 		AllowCredentials: true,
 	}))
 
-	// db := initDB()
-	var db *gorm.DB
+	db := initDB()
 
-	routes.SetupRoutes(router, db)
+	auth0Domain := "YOUR_AUTH0_DOMAIN"
+	auth0ClientID := "YOUR_AUTH0_CLIENT_ID"
+	auth0ClientSecret := "YOUR_AUTH0_CLIENT_SECRET"
+
+	auth0Client := authentication.New(auth0Domain)
+	auth0Management := management.New(auth0Domain, management.WithClientCredentials(auth0ClientID, auth0ClientSecret))
+
+	routes.SetupRoutes(router, db, auth0Client, auth0Management)
 
 	docs.SwaggerInfo.BasePath = "/"
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

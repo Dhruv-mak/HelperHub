@@ -26,11 +26,14 @@ func (s *StringList) Scan(value interface{}) error {
 
 // User struct
 type User struct {
-	ID        uint       `gorm:"primaryKey"`
-	Username  string     `gorm:"unique;not null"`
-	Email     string     `gorm:"unique;not null"`
-	Password  string     `gorm:"not null"`
-	Volunteer bool       `gorm:"default:false"`
-	Voluntee  bool       `gorm:"default:false"`
-	Category  StringList `gorm:"type:jsonb;not null"`
+	ID             uint       `gorm:"primaryKey"`
+	Username       string     `gorm:"unique;not null"`
+	Email          string     `gorm:"unique;not null"`
+	Password       string     `gorm:"not null"`
+	Volunteer      bool       `gorm:"default:false"`
+	Voluntee       bool       `gorm:"default:false"`
+	Category       StringList `gorm:"type:jsonb;not null"`
+	Auth0ID        string     `gorm:"unique"`
+	GitHubID       string     `gorm:"unique"`
+	GoogleID       string     `gorm:"unique"`
 }

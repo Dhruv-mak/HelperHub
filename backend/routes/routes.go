@@ -7,6 +7,9 @@ import (
 	"github.com/prathamrao021/HelperHub/models"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
+	"github.com/auth0/go-auth0"
+	"github.com/auth0/go-auth0/management"
+	"github.com/auth0/go-auth0/authentication"
 )
 
 func createUser(c *gin.Context, db *gorm.DB) {
@@ -65,11 +68,24 @@ func updateUser(c *gin.Context, db *gorm.DB) {
 	c.JSON(http.StatusOK, gin.H{"message": "User data updated successfully"})
 }
 
-func SetupRoutes(router *gin.Engine, db *gorm.DB) {
+func auth0Login(c *gin.Context, auth0Client *authentication.Client) {
+	// Implement Auth0 login logic here
+}
+
+func auth0Callback(c *gin.Context, auth0Client *authentication.Client) {
+	// Implement Auth0 callback logic here
+}
+
+func SetupRoutes(router *gin.Engine, db *gorm.DB, auth0Client *authentication.Client, auth0Management *management.Management) {
 
 	// Routes for user management
 	userRouter := router.Group("/users")
 	userRouter.POST("/create", func(c *gin.Context) { createUser(c, db) })
 	userRouter.POST("/delete/:username", func(c *gin.Context) { deleteUser(c, db) })
 	userRouter.POST("/update/:username", func(c *gin.Context) { updateUser(c, db) })
+
+	// Routes for Auth0 authentication
+	authRouter := router.Group("/auth")
+	authRouter.GET("/login", func(c *gin.Context) { auth0Login(c, auth0Client) })
+	authRouter.GET("/callback", func(c *gin.Context) { auth0Callback(c, auth0Client) })
 }

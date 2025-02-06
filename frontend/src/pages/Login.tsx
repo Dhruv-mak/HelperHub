@@ -13,9 +13,9 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
-import { Google } from '@mui/icons-material';
-import { Facebook } from '@mui/icons-material';
+import { Google, GitHub } from '@mui/icons-material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useAuth0 } from '@auth0/auth0-react';
 
 // Create a theme using MUI `createTheme`
 const theme = createTheme({
@@ -65,6 +65,7 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignUp(props: { disableCustomTheme?: boolean }) {
+  const { loginWithRedirect } = useAuth0();
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
@@ -205,7 +206,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             <Button
               fullWidth
               variant="outlined"
-              onClick={() => alert('Sign up with Google')}
+              onClick={() => loginWithRedirect({ connection: 'google-oauth2' })}
               startIcon={<Google />}
             >
               Sign up with Google
@@ -213,10 +214,10 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             <Button
               fullWidth
               variant="outlined"
-              onClick={() => alert('Sign up with Facebook')}
-              startIcon={<Facebook />}
+              onClick={() => loginWithRedirect({ connection: 'github' })}
+              startIcon={<GitHub />}
             >
-              Sign up with Facebook
+              Sign up with GitHub
             </Button>
             <Typography sx={{ textAlign: 'center' }}>
               Already have an account?{' '}
