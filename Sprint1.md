@@ -188,7 +188,7 @@ What issues your team planned to address and the ones were successfully complete
 Which ones didn't and why?
 
 
-<video src="assets/backend.mp4" controls title="Backend Demo">
+<video src="/assets/backend.mp4" controls title="Backend Demo">
   Your browser does not support the video tag.
 </video>
     
