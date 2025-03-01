@@ -1,181 +1,123 @@
-import {
-  Box,
-  Grid,
-  Typography,
-  Button,
-  Avatar,
-  Paper,
-  Stack,
-  useTheme
-} from '@mui/material';
-import { Public } from '@mui/icons-material';
+"use client"
 
-export const HeroSection = () => {
-  const theme = useTheme();
+import { Button } from "@components/ui/button"
+import { Card, CardContent } from "@components/ui/card"
+import { Avatar, AvatarImage } from "@components/ui/avatar"
+import { Globe, ArrowRight, Heart, Users, Calendar } from "lucide-react"
+import { Link } from "react-router-dom"
 
+export function HeroSection() {
   return (
-    <Box
-      sx={{
-        height: '100%',
-        position: 'relative',
-        overflow: 'hidden',
-        background: 'linear-gradient(45deg, #f8f9fa 0%, #e9ecef 100%)'
-      }}
-    >
-      <Grid
-        container
-        spacing={6}
-        sx={{
-          maxWidth: 1218,
-          margin: '0 auto',
-          height: '100%',
-          alignItems: { lg: 'flex-end' },
-          flexDirection: { xs: 'column', lg: 'row' },
-          justifyContent: { lg: 'space-between' }
-        }}
-      >
-        {/* Left Content */}
-        <Grid item xs={12} lg={6}>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: { xs: 'center', md: 'flex-start' },
-              textAlign: { xs: 'center', md: 'left' },
-              position: 'relative',
-              zIndex: 20
-            }}
-          >
-            <Paper
-              elevation={0}
-              sx={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 2,
-                p: 0.5,
-                pr: 4,
-                mb: 4,
-                borderRadius: 28,
-                bgcolor: 'background.paper',
-                boxShadow: theme.shadows[1]
-              }}
-            >
-              <Button
-                variant="contained"
-                sx={{
-                  borderRadius: 28,
-                  px: { xs: 2, md: 4 },
-                  py: 1,
-                  textTransform: 'none'
-                }}
-              >
-                Join the Movement
-              </Button>
-              <Typography variant="body1" sx={{ maxWidth: 260 }}>
-                <Public sx={{ verticalAlign: 'middle', mr: 1 }} />
-                Connect with Causes that Inspire You at HelperHub
-              </Typography>
-            </Paper>
+    <section className="relative min-h-screen">
+      {/* Background with gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-background/90 to-muted" />
 
-            <Typography
-              variant="h1"
-              sx={{
-              fontWeight: 900,
-              mb: 4,
-              fontSize: {
-                xs: '2.5rem',
-                md: '3.5rem',
-                lg: '4.5rem',
-                xl: '5.5rem'
-              },
-              lineHeight: 1.2,
-              color: 'text.primary'
-              }}
-            >
-              Empower Change Through Volunteering
-            </Typography>
+      {/* Decorative background patterns */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-0 -left-4 w-72 h-72 bg-primary/30 rounded-full mix-blend-multiply filter blur-xl animate-blob" />
+        <div className="absolute top-0 -right-4 w-72 h-72 bg-secondary/30 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000" />
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-accent/30 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000" />
+      </div>
 
-            <Typography
-              variant="h5"
-              sx={{
-                mb: 6,
-                color: 'text.secondary',
-                maxWidth: 600,
-                lineHeight: 1.6
-              }}
-            >
-              Find your passion and make a difference with our tailored volunteer matching platform.
-            </Typography>
+      {/* Main content */}
+      <div className="container relative mx-auto px-4 py-20 md:py-32">
+        <div className="grid gap-12 md:grid-cols-2 md:gap-16 items-center">
+          {/* Left Column */}
+          <div className="flex flex-col space-y-8">
+            {/* Join callout */}
+            <div className="inline-flex items-center space-x-2 rounded-full bg-muted/50 p-1 pr-6 backdrop-blur-sm">
+              <Link to="/register/volunteer">
+                <Button variant="default" className="rounded-full px-5 hover:scale-105 transition-transform cursor-pointer">
+                  Join the Movement
+                </Button>
+              </Link>
+              <span className="flex items-center text-sm font-medium">
+                <Globe className="mr-2 h-4 w-4" />
+                5,000+ Volunteers Worldwide
+              </span>
+            </div>
 
-            <Button
-              variant="contained"
-              size="large"
-              href="/register/volunteer"
-              sx={{
-                px: 6,
-                py: 2,
-                fontSize: '1.25rem',
-                borderRadius: 2,
-                textTransform: 'none'
-              }}
-            >
-              Become a Volunteer
-            </Button>
-          </Box>
-        </Grid>
+            {/* Main heading with gradient text */}
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight">
+              <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                Empower Change
+              </span>
+              <br />
+              Through Volunteering
+            </h1>
 
-        {/* Right Content */}
-        <Grid item xs={12} lg={5}>
-          <Paper
-            elevation={8}
-            sx={{
-              p: 4,
-              borderRadius: 6,
-              border: '4px solid',
-              borderColor: 'divider',
-              background: 'rgba(255, 255, 255, 0.4)',
-              backdropFilter: 'blur(20px)',
-              position: 'relative',
-              zIndex: 20
-            }}
-          >
-            <Stack
-              direction="row"
-              spacing={-2}
-              sx={{ mb: 4, justifyContent: 'center' }}
-            >
-              {[1, 2, 3, 4, 5].map((item) => (
-              <Avatar
-                key={item}
-                src={`./src/assets/images/prof${item}.jpg`}
-                sx={{
-                width: 56,
-                height: 56,
-                border: '2px solid white'
-                }}
-              />
+            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
+              Connect with causes that inspire you, make lasting impacts, and build a
+              better world together with our intelligent volunteer matching platform.
+            </p>
+
+            {/* CTA buttons */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link to="/register/volunteer">
+                  <Button size="lg" className="group cursor-pointer">
+                    Join as Volunteer
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </Button>
+                </Link>
+                <Link to="/register/organization">
+                  <Button size="lg" variant="outline" className="group cursor-pointer">
+                    Register Organization
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-8 pt-8">
+              {[
+                { icon: Heart, label: "Causes", value: "200+" },
+                { icon: Users, label: "Volunteers", value: "5,000+" },
+                { icon: Calendar, label: "Events", value: "1,000+" },
+              ].map(({ icon: Icon, label, value }) => (
+                <div key={label} className="text-center">
+                  <Icon className="mx-auto h-6 w-6 mb-2 text-primary" />
+                  <div className="font-bold text-xl">{value}</div>
+                  <div className="text-sm text-muted-foreground">{label}</div>
+                </div>
               ))}
-            </Stack>
+            </div>
+          </div>
 
-            <Typography
-              variant="h3"
-              sx={{
-                textAlign: 'center',
-                fontWeight: 600,
-                '& span': {
-                  color: 'primary.main',
-                  fontSize: '2.5rem',
-                  [theme.breakpoints.up('lg')]: {
-                    fontSize: '3rem'
-                  }
-                }
-              }}
-            >
-              <span>5,000+</span> Volunteers Ready to Help
-            </Typography>
-          </Paper>
-        </Grid>
-      </Grid>
-    </Box>
-  );
-};
+          {/* Right Column */}
+          <div className="relative flex justify-center">
+            <Card className="bg-background/60 backdrop-blur-md border-muted">
+              <CardContent className="p-8">
+                <div className="flex flex-col items-center space-y-6">
+                  {/* Avatar stack */}
+                  <div className="flex -space-x-4 rtl:space-x-reverse">
+                    {[1, 2, 3, 4, 5].map((item) => (
+                      <Avatar
+                        key={item}
+                        className="h-16 w-16 border-4 border-background transition-transform hover:scale-110"
+                      >
+                        <AvatarImage src={`./src/assets/images/prof${item}.jpg`} />
+                      </Avatar>
+                    ))}
+                  </div>
+
+                  <div className="text-center space-y-4">
+                    <h2 className="text-3xl font-bold">Join Our Community</h2>
+                    <p className="text-muted-foreground">
+                      Connect with passionate volunteers and create meaningful impact together
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Decorative elements */}
+            <div className="absolute -top-4 -right-4 h-24 w-24 bg-primary/10 rounded-full blur-2xl" />
+            <div className="absolute -bottom-4 -left-4 h-24 w-24 bg-secondary/10 rounded-full blur-2xl" />
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}

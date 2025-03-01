@@ -17,13 +17,13 @@ import (
 
 func initDB() *gorm.DB {
 	var err error
-	dsn := "host=localhost user=postgres password=flames_11 dbname=User port=5432 sslmode=prefer TimeZone=Asia/Shanghai"
+	dsn := "host=localhost user=postgres password=admin dbname=Helperhub port=5432 sslmode=prefer TimeZone=Asia/Shanghai"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
 	}
 
-	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.User{}, &models.Volunteer{})
 	fmt.Println("Database connection successfully opened")
 	return db
 }
@@ -41,7 +41,6 @@ func initDB() *gorm.DB {
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 
 // @host      localhost:8080
-// @BasePath  /users
 
 // @securityDefinitions.basic  BasicAuth
 

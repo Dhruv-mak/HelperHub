@@ -1,90 +1,147 @@
-import * as React from 'react';
-import { AppBar, Toolbar, Typography, Button, Box, Drawer, IconButton, TextField, Switch } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import { Link } from 'react-router-dom'; 
-import { useTheme } from '@mui/material/styles';
+"use client"
 
-export default function Navbar() {
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
-  const [darkMode, setDarkMode] = React.useState(false);
-  const theme = useTheme();
+import * as React from "react"
+import {
+    NavigationMenu,
+    NavigationMenuList,
+    NavigationMenuItem,
+    NavigationMenuTrigger,
+    NavigationMenuContent,
+    NavigationMenuLink,
+    NavigationMenuIndicator,
+    NavigationMenuViewport,
+} from "@/components/ui/navigation-menu"
+import { Button } from "@/components/ui/button"
+import { Sun, Moon } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { NavbarProps } from "./Navbar.types"
+import { useTheme } from "@/components/theme-provider"
+import { Link } from "react-router-dom"
 
-  const toggleDrawer = (open: boolean) => {
-    setDrawerOpen(open);
-  };
+// type Theme = "dark" | "light" | "system"
 
-  const handleThemeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDarkMode(event.target.checked);
-  };
+function isSystemDark() {
+    if (typeof window === "undefined") return false
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+}
 
-  return (
-    <AppBar position="sticky" color="primary">
-      <Toolbar>
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          HelperHub
-        </Typography>
+function ModeToggle() {
+    const { theme, setTheme } = useTheme()
 
-        {/* Search Bar */}
-        <TextField
-          variant="outlined"
-          placeholder="Search..."
-          size="small"
-          sx={{
-            marginRight: 2,
-            backgroundColor: theme.palette.background.paper,
-            borderRadius: 1,
-            '& .MuiInputBase-root': {
-              paddingLeft: 2,
-            },
-          }}
-        />
+    const isDarkMode =
+        theme === "dark" || (theme === "system" && isSystemDark())
 
-        {/* Desktop Navigation */}
-        <Box sx={{ display: { xs: 'none', sm: 'flex' } }}>
-          <Button color="inherit" component={Link} to="/home">
-            Home
-          </Button>
-          <Button color="inherit" component={Link} to="/about">
-            About
-          </Button>
-          <Button color="inherit" component={Link} to="/contact">
-            Contact
-          </Button>
-        </Box>
+    function toggleTheme() {
+        if (isDarkMode) {
+            setTheme("light")
+        } else {
+            setTheme("dark")
+        }
+    }
 
-        {/* Toggle Dark/Light Mode */}
-        <Switch checked={darkMode} onChange={handleThemeChange} />
+    return (
+        <Button variant="ghost" size="icon" onClick={toggleTheme}>
+            {isDarkMode ? (
+                <Sun className="h-5 w-5" />
+            ) : (
+                <Moon className="h-5 w-5" />
+            )}
+            <span className="sr-only">Toggle theme</span>
+        </Button>
+    )
+}
 
-        {/* Mobile Menu Icon */}
-        <IconButton
-          color="inherit"
-          aria-label="menu"
-          edge="end"
-          onClick={() => toggleDrawer(true)}
-          sx={{ display: { xs: 'block', sm: 'none' } }}
-        >
-          <MenuIcon />
-        </IconButton>
-      </Toolbar>
+const MenuListItem = React.forwardRef<
+    React.ElementRef<"a">,
+    React.ComponentPropsWithoutRef<"a"> & { title: string }
+>(({ className, title, children, ...props }, ref) => {
+    return (
+        <li>
+            <NavigationMenuLink asChild>
+                <a
+                    ref={ref}
+                    className={cn(
+                        "block select-none space-y-1 rounded-md p-3 no-underline outline-none transition-colors",
+                        "hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+                        className
+                    )}
+                    {...props}
+                >
+                    <div className="text-sm font-medium leading-none">{title}</div>
+                    {children ? (
+                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                            {children}
+                        </p>
+                    ) : null}
+                </a>
+            </NavigationMenuLink>
+        </li>
+    )
+})
 
-      {/* Drawer for Mobile */}
-      <Drawer
-        anchor="right"
-        open={drawerOpen}
-        onClose={() => toggleDrawer(false)}
-      >
-        <Box sx={{ width: 250 }} role="presentation" onClick={() => toggleDrawer(false)}>
-          <Button color="inherit" fullWidth component={Link} to="/home">
-            Home
-          </Button>
-          <Button color="inherit" fullWidth component={Link} to="/about">
-            About
-          </Button>
-          <Button color="inherit" fullWidth component={Link} to="/contact">
-            Contact
-          </Button>
-        </Box>
-      </Drawer>
-    </AppBar>
-  );
+MenuListItem.displayName = "MenuListItem"
+
+export function Navbar({
+    logo = "HELPERHUB",
+    menuItems,
+    showThemeToggle = true,
+    showLoginButton = true,
+    onLoginClick,
+}: NavbarProps) {
+    return (
+        <nav className="container flex items-center justify-between px-14 py-5 w-full absolute top-0 left-0 z-50">
+            {/* Left: Logo */}
+            <Link to="/" className="cursor-pointer">
+                <div className="text-3xl font-bold italic font-[cursive] tracking-wide">
+                    {logo}
+                </div>
+            </Link>
+
+            <NavigationMenu className="mx-6 flex-1">
+                <NavigationMenuList>
+                    {menuItems.map((item, index) => (
+                        <NavigationMenuItem key={index}>
+                            {item.subItems ? (
+                                <>
+                                    <NavigationMenuTrigger className="text-md">
+                                        {item.title}
+                                    </NavigationMenuTrigger>
+                                    <NavigationMenuContent>
+                                        <ul className="flex flex-col space-y-1 p-2 min-w-[220px]">
+                                            {item.subItems.map((subItem, subIndex) => (
+                                                <MenuListItem
+                                                    key={subIndex}
+                                                    title={subItem.title}
+                                                    href={subItem.href}
+                                                >
+                                                    {subItem.description}
+                                                </MenuListItem>
+                                            ))}
+                                        </ul>
+                                    </NavigationMenuContent>
+                                </>
+                            ) : (
+                                <NavigationMenuLink
+                                    className="cursor-pointer"
+                                    href={item.href || "#"}
+                                >
+                                    {item.title}
+                                </NavigationMenuLink>
+                            )}
+                        </NavigationMenuItem>
+                    ))}
+                    <NavigationMenuIndicator />
+                </NavigationMenuList>
+                <NavigationMenuViewport />
+            </NavigationMenu>
+
+            {/* Right side: Theme Switcher + Login button */}
+            <div className="flex items-center space-x-2">
+                {showThemeToggle && <ModeToggle />}
+                {showLoginButton && (
+                    <Button onClick={onLoginClick} className="cursor-pointer">Login</Button>
+                )}
+            </div>
+        </nav>
+    )
 }

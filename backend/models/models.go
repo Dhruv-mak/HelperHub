@@ -4,6 +4,7 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
+	"time"
 )
 
 // StringList is a custom type for a list of strings
@@ -26,11 +27,79 @@ func (s *StringList) Scan(value interface{}) error {
 
 // User struct
 type User struct {
-	ID        uint       `gorm:"primaryKey"`
-	Username  string     `gorm:"unique;not null"`
-	Email     string     `gorm:"unique;not null"`
-	Password  string     `gorm:"not null"`
-	Volunteer bool       `gorm:"default:false"`
-	Voluntee  bool       `gorm:"default:false"`
-	Category  StringList `gorm:"type:jsonb;not null"`
+	ID            uint   `gorm:"primaryKey"`
+	Email         string `gorm:"unique;not null"`
+	Password_Hash string `gorm:"not null"`
+	Full_Name     string `gorm:"not null"`
+	Role          string `gorm:"not null"`
+	Created_At    time.Time
+	Updated_At    time.Time
+}
+
+// Volunteer struct
+type Volunteer struct {
+	ID               uint   `gorm:"primaryKey"`
+	Email            string `gorm:"unique;not null"`
+	Password_Hash    string `gorm:"not null"`
+	Name             string `gorm:"not null"`
+	Phone            string `gorm:"unique;not null"`
+	Location         string
+	Bio_Data         string
+	Availabile_Hours uint `gorm:"not null"`
+	Created_At       time.Time
+	Updated_At       time.Time
+}
+
+// Organization struct
+type Organization struct {
+	ID            uint   `gorm:"primaryKey"`
+	Email         string `gorm:"unique;not null"`
+	Password_Hash string `gorm:"not null"`
+	Name          string `gorm:"unique;not null"`
+	Phone         string `gorm:"not null"`
+	Location      string `gorm:"not null"`
+	Description   string `gorm:"not null"`
+	Website_Url   string `gorm:"not null"`
+	Created_At    time.Time
+	Updated_At    time.Time
+}
+
+// Category struct
+type Category struct {
+	ID         uint   `gorm:"primaryKey"`
+	Category   string `gorm:"unique;not null"`
+	Created_At time.Time
+	Updated_At time.Time
+}
+
+// Volunteer_Category struct
+type Volunteer_Category struct {
+	ID           uint `gorm:"primaryKey"`
+	Volunteer_ID uint `gorm:"not null"`
+	Category_ID  uint `gorm:"not null"`
+}
+
+// Opportunity struct
+type Opportunity struct {
+	ID              uint      `gorm:"primaryKey"`
+	Organization_ID uint      `gorm:"not null"`
+	Category_ID     uint      `gorm:"not null"`
+	Title           string    `gorm:"not null"`
+	Description     string    `gorm:"not null"`
+	Location        string    `gorm:"not null"`
+	Start_Date      time.Time `gorm:"not null"`
+	End_Date        time.Time `gorm:"not null"`
+	Created_At      time.Time
+	Updated_At      time.Time
+}
+
+// Application struct
+type Application struct {
+	ID             uint   `gorm:"primaryKey"`
+	Volunteer_ID   uint   `gorm:"not null"`
+	Opportunity_ID uint   `gorm:"not null"`
+	Status         string `gorm:"not null"`
+	Cover_Letter   string `gorm:"not null"`
+	Created_At     time.Time
+	Updated_At     time.Time
 }
